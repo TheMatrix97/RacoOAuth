@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf');
 const racoAuth = require('./racoAuth');
+const tokenModel = require('./bdController');
+const ip = require('ip');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use((ctx, next) => {
     const start = new Date()
@@ -10,7 +12,14 @@ bot.use((ctx, next) => {
         console.log('Response time %sms', ms);
     })
 });
-bot.start((ctx) => ctx.reply('Welcome'));
+bot.start(ctx => {
+    ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth");
+    let t = new tokenModel({id: "12", token: "12" });
+    console.log(t);
+    t.save().then(function(){
+        console.log("guardado")
+    })
+});
 
 
 bot.startPolling();

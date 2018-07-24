@@ -51,9 +51,6 @@ try {
 }
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello<br><a href="/auth">Log in with Github</a>');
-});
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.listen(3000, () => console.log('App listening on port 3000!'));
 module.exports = oauth2;
