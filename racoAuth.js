@@ -2,6 +2,7 @@
 
 const simpleOauthModule = require('simple-oauth2');
 const express = require('express');
+const tokenModel = require('./bdController');
 const app = express();
 
 const oauth2 = simpleOauthModule.create({
@@ -24,7 +25,8 @@ const authorizationUri = oauth2.authorizationCode.authorizeURL({
 // Initial page redirecting to Github
 app.get('/auth', (req, res) => {
     console.log(authorizationUri);
-res.redirect(authorizationUri);
+    console.log("id: " + req.query.id);
+res.redirect(authorizationUri+"?id="+req.query.id);
 });
 
 // Callback service parsing the authorization token and asking for the access token
@@ -32,19 +34,26 @@ app.get('/callback', async (req, res) => {
     const code = req.query.code;
 const options = {
     code: code,
-    redirect_uri: 'http://localhost:3000/callback',
+    redirect_uri: 'http://localhost:3000/callback?id=' + req.query.id, //el id tiene que ser el mismo que nos llega a la peticion
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
 };
 
 try {
+    const id = req.query.id;
     const result = await oauth2.authorizationCode.getToken(options);
 
     console.log('The resulting token: ', result);
 
-    const token = oauth2.accessToken.create(result);
+   // const token = oauth2.accessToken.create(result);
+    //guardar token en bd
+    console.log("voy a guardar a " + id);
+    let t = new tokenModel({id: id , token: result }); //id del pavo que ha dicho start
+    t.save().then(function(){
+        console.log("guardado");
+        return res.status(200).json(result);
+    });
 
-    return res.status(200).json(token)
 } catch(error) {
     console.error('Access Token Error', error.message);
     return res.status(500).json('Authentication failed');
