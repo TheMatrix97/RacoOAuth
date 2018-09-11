@@ -1,6 +1,7 @@
 const Telegraf = require('telegraf');
-const racoAuth = require('./racoAuth');
 const tokenModel = require('./bdController');
+const racoAuth = require('./racoAuth');
+const api = require('./ApiClient');
 const ip = require('ip');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use((ctx, next) => {
@@ -23,5 +24,21 @@ bot.start(ctx => {
     });
 });
 
+bot.hears('/data', (ctx) => {
+    private_token(ctx.message.from.id,function(token){
+        api.getData(token).then(function(res){
+            console.log(res);
+            ctx.reply("Nom: " + res.nom + " " + res.cognoms + "\nEmail: " + res.email);
+        });
+    });
+});
+
+const private_token = function(id,callback){
+  tokenModel.find({id: id}, function(err,docs){
+      if(!err && docs.length > 0){
+          return callback(docs[0].token.access_token);
+      }
+  })
+};
 
 bot.startPolling();
