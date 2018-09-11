@@ -26,7 +26,14 @@ const authorizationUri = oauth2.authorizationCode.authorizeURL({
 app.get('/auth', (req, res) => {
     console.log(authorizationUri);
     console.log("id: " + req.query.id);
-res.redirect(authorizationUri+"?id="+req.query.id);
+    tokenModel.find({id: req.query.id},function(err,docs){
+        console.log("Find: " + docs);
+        if(docs.length === 0){
+            res.redirect(authorizationUri+"?id="+req.query.id);
+        }else{
+            res.send("Ya te tengo registrado...");
+        }
+    });
 });
 
 // Callback service parsing the authorization token and asking for the access token

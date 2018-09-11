@@ -13,7 +13,14 @@ bot.use((ctx, next) => {
     })
 });
 bot.start(ctx => {
-    ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
+    tokenModel.find({id: ctx.message.from.id},function(err,docs){
+        console.log("Find: " + docs);
+        if(docs.length === 0){
+          ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
+        }else{
+          ctx.reply("Ya te tengo registrado :3")
+        }
+    });
 });
 
 
