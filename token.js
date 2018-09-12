@@ -7,7 +7,7 @@ var token = new schema({
         expires_in: Number,
         refresh_token: String,
         scope: String,
-        expires_at: String
+        expires_at: Date
     }
 });
 module.exports = token;

@@ -49,7 +49,8 @@ const options = {
 try {
     const id = req.query.id;
     const result = await oauth2.authorizationCode.getToken(options);
-
+    var ms = new Date().getTime();
+    result.expires_at = new Date(((result.expires_in - 100)*1000) + ms);
     console.log('The resulting token: ', result);
 
    // const token = oauth2.accessToken.create(result);

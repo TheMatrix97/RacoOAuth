@@ -8,6 +8,7 @@ const aux = {
                 headers: {"Authorization": "Bearer " + client_id}
             };
             client.get("https://api.fib.upc.edu/v2/jo.json",args,function(data,response){
+                console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
                 }else reject(response.statusCode);

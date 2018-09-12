@@ -33,10 +33,21 @@ bot.hears('/data', (ctx) => {
     });
 });
 
-const private_token = function(id,callback){
-  tokenModel.find({id: id}, function(err,docs){
+const private_token = function (id,callback){
+  tokenModel.find({id: id}, async function(err,docs){
+      let accessToken = racoAuth.accessToken.create(docs[0].token);
       if(!err && docs.length > 0){
-          return callback(docs[0].token.access_token);
+          try {
+              if(accessToken.expired()) {
+                  accessToken = await accessToken.refresh({client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET});
+                  console.log(accessToken);
+                  docs[0].updateOne({token: accessToken});
+              }
+          }
+          catch(error){
+              console.log('Error refreshing access token: ', error.message);
+          }
+          return callback(accessToken.token.access_token);
       }
   })
 };
