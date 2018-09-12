@@ -33,6 +33,17 @@ bot.hears('/data', (ctx) => {
     });
 });
 
+bot.hears('/foto', (ctx) => {
+    private_token(ctx.message.from.id,function(token){
+        api.getFoto(token).then(function(res){
+            ctx.replyWithPhoto({
+                source: Buffer.from(res)
+            });
+        });
+    });
+});
+
+
 const private_token = function (id,callback){
   tokenModel.find({id: id}, async function(err,docs){
       let accessToken = racoAuth.accessToken.create(docs[0].token);
@@ -51,5 +62,6 @@ const private_token = function (id,callback){
       }
   })
 };
+
 
 bot.startPolling();

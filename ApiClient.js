@@ -16,6 +16,20 @@ const aux = {
         });
     },
 
+    getFoto: function(client_id){
+        return new Promise(function(resolve,reject){
+            var args = {
+                headers: {"Authorization": "Bearer " + client_id}
+            };
+            client.get("https://api.fib.upc.edu/v2/jo/foto.jpg",args,function(data,response){
+                console.log(response.statusCode);
+                if(response.statusCode === 200){
+                    return resolve(data);
+                }else reject(response.statusCode);
+            })
+        });
+    },
+
 
 };
 module.exports = aux;
