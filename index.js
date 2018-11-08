@@ -1,5 +1,5 @@
 const Telegraf = require('telegraf');
-const tokenModel = require('./bdController');
+const tokenModel = require('./controllers/bdController');
 const racoAuth = require('./racoAuth');
 const api = require('./ApiClient');
 const ip = require('ip');
