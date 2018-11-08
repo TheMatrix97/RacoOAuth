@@ -7,7 +7,8 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use((ctx, next) => {
     const start = new Date();
     console.log("persona: " + ctx.message.from.id);
-    if(ctx.message.from.id !== 316789902) return null;
+    if(ctx.message.from.id !== 316789902) return null;//just for testing
+    //check has valid token
     return next(ctx).then(() => {
         const ms = new Date() - start;
         console.log('Response time %sms', ms);
@@ -17,7 +18,7 @@ bot.start(ctx => {
     tokenModel.find({id: ctx.message.from.id},function(err,docs){
         console.log("Find: " + docs);
         if(docs.length === 0){
-          ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
+          ask_token();
         }else{
           ctx.reply("Ya te tengo registrado :3")
         }
@@ -25,10 +26,12 @@ bot.start(ctx => {
 });
 
 bot.hears('/data', (ctx) => {
-    private_token(ctx.message.from.id,function(token){
+    private_token(ctx.message.from.id).then(function(token){
         api.getData(token).then(function(res){
             console.log(res);
             ctx.reply("Nom: " + res.nom + " " + res.cognoms + "\nEmail: " + res.email);
+        }, function(err){ //error al pillar el token
+            ask_token(ctx);
         });
     });
 });
@@ -44,12 +47,12 @@ bot.hears('/foto', (ctx) => {
 });
 
 
-const private_token = function (id,callback){
+const private_token = new Promise (function (id, resolve, reject){
   tokenModel.find({id: id}, async function(err,docs){
       let accessToken = racoAuth.accessToken.create(docs[0].token);
       if(!err && docs.length > 0){
           try {
-              if(accessToken.expired()) {
+              if(accessToken.expired()) { //si se ha caducado hay que actualizar
                   accessToken = await accessToken.refresh({client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET});
                   console.log(accessToken);
                   docs[0].updateOne({token: accessToken});
@@ -58,10 +61,12 @@ const private_token = function (id,callback){
           catch(error){
               console.log('Error refreshing access token: ', error.message);
           }
-          return callback(accessToken.token.access_token);
-      }
+          resolve(accessToken.token.access_token);
+      }else reject();
   })
-};
+});
 
-
+function ask_token(ctx){
+    ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
+}
 bot.startPolling();
