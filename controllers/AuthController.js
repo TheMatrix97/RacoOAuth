@@ -1,4 +1,5 @@
 'use strict';
+//Contiene el codigo del servidor express que se encarga de pedir el token y guardarlo a la BD, workflow oauth2
 
 const simpleOauthModule = require('simple-oauth2');
 const express = require('express');
@@ -40,7 +41,7 @@ app.get('/auth', (req, res) => {
 app.get('/callback', async (req, res) => {
     const code = req.query.code;
 const options = {
-    code: code,
+    code: code, //authorization code
     redirect_uri: 'http://localhost:3000/callback?id=' + req.query.id, //el id tiene que ser el mismo que nos llega a la peticion
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
