@@ -1,4 +1,5 @@
 'use strict';
+//Contiene el codigo del servidor express que se encarga de pedir el token y guardarlo a la BD, workflow oauth2
 
 const simpleOauthModule = require('simple-oauth2');
 const express = require('express');

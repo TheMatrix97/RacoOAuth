@@ -54,6 +54,7 @@ bot.hears('/foto', (ctx) => {
 });
 
 
+//no se si este es el mejor sitio para esto...
 const private_token = function(id) {
     return new Promise(function (resolve, reject) {
         tokenModel.find({id: id}, async function (err, docs) {
