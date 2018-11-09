@@ -17,9 +17,9 @@ bot.use((ctx, next) => {
             const ms = new Date() - start;
             console.log('Response time %sms', ms);
         })
-    }, function(err){
+    }, function(){
         console.log("no tengo el token, asking...");
-        ask_token();
+        ask_token(ctx);
         return null;
     });
 });
@@ -58,8 +58,8 @@ bot.hears('/foto', (ctx) => {
 const private_token = function(id) {
     return new Promise(function (resolve, reject) {
         tokenModel.find({id: id}, async function (err, docs) {
-            let accessToken = racoAuth.accessToken.create(docs[0].token);
             if (!err && docs.length > 0) {
+                let accessToken = racoAuth.accessToken.create(docs[0].token);
                 try {
                     if (accessToken.expired()) { //si se ha caducado hay que actualizar
                         accessToken = await accessToken.refresh({
