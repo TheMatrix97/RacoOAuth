@@ -20,7 +20,7 @@ const oauth2 = simpleOauthModule.create({
 
 // Authorization uri definition
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
-    redirect_uri: 'http://localhost:3000/callback',
+    redirect_uri: process.env.URL+'/callback',
 });
 
 // Initial page redirecting to Github
@@ -42,7 +42,7 @@ app.get('/callback', async (req, res) => {
     const code = req.query.code;
 const options = {
     code: code, //authorization code
-    redirect_uri: 'http://localhost:3000/callback?id=' + req.query.id, //el id tiene que ser el mismo que nos llega a la peticion
+    redirect_uri: process.env.URL + '/callback?id=' + req.query.id, //el id tiene que ser el mismo que nos llega a la peticion
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
 };

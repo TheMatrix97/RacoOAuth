@@ -80,7 +80,7 @@ const private_token = function(id) {
 };
 
 function ask_token(ctx){
-    ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
+    ctx.reply("Autoriza: "+process.env.URL+"/auth?id="+ctx.message.from.id);
 }
 
 
