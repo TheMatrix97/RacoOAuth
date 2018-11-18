@@ -60,7 +60,7 @@ try {
     let t = new tokenModel({id: id , token: result }); //id del pavo que ha dicho start
     t.save().then(function(){
         console.log("guardado");
-        return res.status(200).json(result);
+        return res.send("Se ha autenticado correctamente");
     });
 
 } catch(error) {
