@@ -83,4 +83,6 @@ function ask_token(ctx){
     ctx.reply("Autoriza: http://"+ip.address() + ":3000/auth?id="+ctx.message.from.id);
 }
 
+
+
 bot.startPolling();

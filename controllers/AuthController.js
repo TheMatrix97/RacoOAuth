@@ -69,6 +69,6 @@ try {
 }
 });
 
-
-app.listen(3000, () => console.log('App listening on port 3000!'));
+var port=Number(process.env.PORT || 3000);
+app.listen(port, () => console.log('App listening on port ' + port));
 module.exports = oauth2;
