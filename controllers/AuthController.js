@@ -69,6 +69,36 @@ try {
 }
 });
 
-var port=Number(process.env.PORT || 3000);
+//no se si este es el mejor sitio para esto...
+const private_token = function(id) {
+    return new Promise(function (resolve, reject) {
+        tokenModel.find({id: id}, async function (err, docs) {
+            if (!err && docs.length > 0) {
+                let accessToken = oauth2.accessToken.create(docs[0].token);
+                try {
+                    if (accessToken.expired()) { //si se ha caducado hay que actualizar
+                        accessToken = await accessToken.refresh({
+                            client_id: process.env.CLIENT_ID,
+                            client_secret: process.env.CLIENT_SECRET
+                        });
+                        console.log(accessToken);
+                        let token = docs[0];
+                        token.token = accessToken.token;
+                        token.save(function (err, item) {
+                            if (err) throw err;
+                            resolve(item.token.access_token);
+                        });
+                    }else resolve(accessToken.token.access_token);
+                }
+                catch (error) {
+                    console.log('Error refreshing access token: ', error.message);
+                    reject();
+                }
+            } else reject();
+        });
+    });
+};
+
+let port=Number(process.env.PORT || 3000);
 app.listen(port, () => console.log('App listening on port ' + port));
-module.exports = oauth2;
+module.exports.private_token = private_token;

@@ -11,7 +11,7 @@ bot.use((ctx, next) => {
     console.log("persona: " + ctx.message.from.id);
    // if(ctx.message.from.id !== 316789902) return null;//just for testing todo delete this in prod
     //check has valid token
-    private_token(ctx.message.from.id).then(function(token){
+    racoAuth.private_token(ctx.message.from.id).then(function(token){
         ctx.token = token;
         return next(ctx).then(() => {
             const ms = new Date() - start;
@@ -53,36 +53,6 @@ bot.hears('/foto', (ctx) => {
     });
 });
 
-
-//no se si este es el mejor sitio para esto...
-const private_token = function(id) {
-    return new Promise(function (resolve, reject) {
-        tokenModel.find({id: id}, async function (err, docs) {
-            if (!err && docs.length > 0) {
-                let accessToken = racoAuth.accessToken.create(docs[0].token);
-                try {
-                    if (accessToken.expired()) { //si se ha caducado hay que actualizar
-                        accessToken = await accessToken.refresh({
-                            client_id: process.env.CLIENT_ID,
-                            client_secret: process.env.CLIENT_SECRET
-                        });
-                        console.log(accessToken);
-                        let token = docs[0];
-                        token.token = accessToken.token;
-                        token.save(function (err, item) {
-                            if (err) throw err;
-                            resolve(item.token.access_token);
-                        });
-                    }else resolve(accessToken.token.access_token);
-                }
-                catch (error) {
-                    console.log('Error refreshing access token: ', error.message);
-                    reject();
-                }
-            } else reject();
-        });
-    });
-};
 
 function ask_token(ctx){
     ctx.reply("Autoriza: "+process.env.URL+"/auth?id="+ctx.message.from.id);
