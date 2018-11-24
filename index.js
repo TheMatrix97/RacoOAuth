@@ -51,8 +51,6 @@ function ask_token(ctx){
     ctx.reply("Autoriza: "+process.env.URL+"/auth?id="+ctx.message.from.id);
 }
 
-
-notificationsController(bot);
+notificationsController.run(bot);
 bot.startPolling();
-//interval checker notificacions
-//setInterval(notificationsController(bot),300000);
+

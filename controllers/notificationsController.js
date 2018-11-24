@@ -3,6 +3,7 @@ const users = require('./AuthController');
 const db = require('./bdController');
 const schemaNotification = require('../models/notificationid');
 const NotificationidModel = db.model('Notificationid', schemaNotification);
+const extra = require('telegraf/extra');
 
 let bot = null;
 
@@ -26,8 +27,15 @@ const search_notification = function(id){
                   });
               } else if (docs.length === 1) {
                   let diferences = await compare(docs[0].notifications, data.results);
-                  console.log(diferences);
-
+                  notify_user(id, diferences);
+                  //update
+                  if(diferences.length > 0) {
+                      docs[0].notifications = data.results;
+                      docs[0].save(function (err) {
+                          if (err) console.log("error al actualizar el las notificaciones");
+                          else console.log("He actualizado las notificaciones de " + id);
+                      });
+                  }
               }
               else {
                   console.log("Error al actualizar las notificaciones");
@@ -38,24 +46,38 @@ const search_notification = function(id){
 };
 
 function compare(data_from_db, data_from_api){
-    //TODO change orden, data_from_api.filter(!data_from_db), ara esta en mode testing
-    return data_from_db
-        .filter(x => !data_from_api.containsNotification(x));
+    return data_from_api
+        .filter(x => !data_from_db.containsNotification(x));
 }
 
-function notify_user(id, notification){
-    if(id === "316789902") {
-        bot.telegram.sendMessage(id, "Tienes un nuevo aviso! (Si eres lluis me puedes comer los huevos)");
-    }
+function notify_user(id, notifications){
+    console.log("Notifico al user " + id);
+    notifications.forEach(function(item){
+       bot.telegram.sendMessage(id, genera_avis(item), extra.HTML());
+    });
 }
 
-const check_new_notifications = function (bot_i){
+function genera_avis(item){
+    let res = `⭐Tens un nou avís al racó!⭐
+<b>Assignatura:</b> ${item.codi_assig}
+<b>Titol:</b> ${item.titol}
+<b>Text:</b> ${item.text}`;
+    let reg = /<(?!\/?(b|strong|i|a|code|pre)(?=>|\s.*>))\/?.*?>/g;
+    return  res.replace(reg,"");
+}
+
+const check_new_notifications = function (){
     //for each user in DB
-    bot = bot_i;
+    console.log("Vamos a revisar las notificaciones");
     users.get_all_users().then(function(ids){
         ids.forEach(search_notification);
     });
 };
 
-//setInterval(check_new_notifications,300000);
-module.exports = check_new_notifications;
+function run(bot_i){
+    bot = bot_i;
+    setInterval(check_new_notifications, 300000);
+    console.log("Intervalo notificaciones configurado");
+}
+
+module.exports.run = run;
