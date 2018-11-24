@@ -2,6 +2,7 @@ require('./controllers/notificationsController');
 const Telegraf = require('telegraf');
 const racoAuth = require('./controllers/AuthController');
 const api = require('./controllers/ApiController');
+const notificationsController = require('./controllers/notificationsController');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.context.token = null;
@@ -51,5 +52,7 @@ function ask_token(ctx){
 }
 
 
-
+notificationsController(bot);
 bot.startPolling();
+//interval checker notificacions
+//setInterval(notificationsController(bot),300000);

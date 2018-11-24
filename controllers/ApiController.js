@@ -12,7 +12,10 @@ const aux = {
                 console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
-                }else reject(response.statusCode);
+                }else{
+                    console.log("error api" + response.statusCode);
+                    reject(response.statusCode);
+                }
             })
         });
     },
@@ -26,7 +29,10 @@ const aux = {
                 console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
-                }else reject(response.statusCode);
+                }else{
+                    console.log("error api" + response.statusCode);
+                    reject(response.statusCode);
+                }
             })
         });
     },
@@ -40,7 +46,10 @@ const aux = {
                 console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
-                }else reject(response.statusCode);
+                }else{
+                    console.log("error api" + response.statusCode);
+                    reject(response.statusCode);
+                }
             })
         });
     }
