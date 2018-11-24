@@ -39,6 +39,10 @@ app.get('/auth', (req, res) => {
     });
 });
 
+app.get('/ping',(req,res) =>{
+    res.send("pong");
+});
+
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', async (req, res) => {
     const code = req.query.code;
