@@ -51,9 +51,9 @@ function compare(data_from_db, data_from_api){
 }
 
 function notify_user(id, notifications){
-    console.log("Notifico al user " + id);
     notifications.forEach(function(item){
-       bot.telegram.sendMessage(id, genera_avis(item), extra.HTML());
+        console.log("Notifico al user " + id);
+        bot.telegram.sendMessage(id, genera_avis(item), extra.HTML());
     });
 }
 
