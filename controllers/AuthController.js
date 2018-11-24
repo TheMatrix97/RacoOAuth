@@ -3,7 +3,9 @@
 
 const simpleOauthModule = require('simple-oauth2');
 const express = require('express');
-const tokenModel = require('./bdController');
+const db = require('./bdController');
+const schemaToken = require('../models/token');
+const tokenModel = db.model('Token', schemaToken);
 const app = express();
 
 const oauth2 = simpleOauthModule.create({

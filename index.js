@@ -1,8 +1,7 @@
+require('./controllers/notificationsController');
 const Telegraf = require('telegraf');
-const tokenModel = require('./controllers/bdController');
 const racoAuth = require('./controllers/AuthController');
 const api = require('./controllers/ApiController');
-const ip = require('ip');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.context.token = null;
@@ -25,14 +24,7 @@ bot.use((ctx, next) => {
 });
 
 bot.start(ctx => {
-    tokenModel.find({id: ctx.message.from.id},function(err,docs){
-        console.log("Find: " + docs);
-        if(docs.length === 0){
-          ask_token();
-        }else{
-          ctx.reply("Ya te tengo registrado :3")
-        }
-    });
+    ctx.reply("Todo esta listo! A partir de ahora te tendré al tanto de los nuevos avisos en el racó ;)");
 });
 
 bot.hears('/data', (ctx) => {
