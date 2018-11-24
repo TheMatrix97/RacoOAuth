@@ -1,5 +1,6 @@
 var Client = require('node-rest-client').Client;
 var client = new Client();
+const server = "https://api.fib.upc.edu";
 
 const aux = {
     getData: function(client_id){
@@ -7,7 +8,7 @@ const aux = {
             var args = {
                 headers: {"Authorization": "Bearer " + client_id}
             };
-            client.get("https://api.fib.upc.edu/v2/jo.json",args,function(data,response){
+            client.get(server+"/v2/jo.json",args,function(data,response){
                 console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
@@ -21,7 +22,7 @@ const aux = {
             var args = {
                 headers: {"Authorization": "Bearer " + client_id}
             };
-            client.get("https://api.fib.upc.edu/v2/jo/foto.jpg",args,function(data,response){
+            client.get(server+"/v2/jo/foto.jpg",args,function(data,response){
                 console.log(response.statusCode);
                 if(response.statusCode === 200){
                     return resolve(data);
@@ -29,6 +30,20 @@ const aux = {
             })
         });
     },
+
+    getAvisos: function(client_id){
+        return new Promise(function(resolve,reject){
+            var args = {
+                headers: {"Authorization": "Bearer " + client_id}
+            };
+            client.get(server+"/v2/jo/avisos.json",args,function(data,response){
+                console.log(response.statusCode);
+                if(response.statusCode === 200){
+                    return resolve(data);
+                }else reject(response.statusCode);
+            })
+        });
+    }
 
 
 };

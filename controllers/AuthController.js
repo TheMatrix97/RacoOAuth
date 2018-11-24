@@ -101,6 +101,19 @@ const private_token = function(id) {
     });
 };
 
+const get_all_users = function () {
+  return new Promise(function(resolve,reject){
+    tokenModel.find({}, async function (err,docs) {
+        let ids = [];
+        docs.forEach(function(item){
+            ids.push(item.id);
+        });
+        resolve(ids);
+    });
+  });
+};
+
 let port=Number(process.env.PORT || 3000);
 app.listen(port, () => console.log('App listening on port ' + port));
 module.exports.private_token = private_token;
+module.exports.get_all_users = get_all_users;
