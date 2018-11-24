@@ -1,5 +1,5 @@
 var schema = require('mongoose').Schema;
-var adjunt = require('adjunt');
+var adjunt = require('./adjunt');
 var notification = new schema({
     titol: String,
     codi_assig: String,
