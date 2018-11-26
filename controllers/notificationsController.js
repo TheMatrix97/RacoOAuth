@@ -40,6 +40,9 @@ const search_notification = function(id){
               else {
                   console.log("Error al actualizar las notificaciones");
               }
+          }, function(err){
+              console.log("Hay un error con el token de " + id + " voy a volver a pedir -> " + err);
+              bot.telegram.sendMessage(id, "No he podido acceder a tus avisos, porfavor vuelve a darme autorización :S\n" + "Autoriza: "+process.env.URL+"/auth?id="+id);
           });
       });
   });

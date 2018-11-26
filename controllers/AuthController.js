@@ -5,7 +5,9 @@ const simpleOauthModule = require('simple-oauth2');
 const express = require('express');
 const db = require('./bdController');
 const schemaToken = require('../models/token');
+const schemaNotification = require('../models/notificationid');
 const tokenModel = db.model('Token', schemaToken);
+const notificacionModel = db.model('notificationid',schemaNotification);
 const app = express();
 
 const oauth2 = simpleOauthModule.create({
@@ -31,11 +33,18 @@ app.get('/auth', (req, res) => {
     console.log("id: " + req.query.id);
     tokenModel.find({id: req.query.id},function(err,docs){
         console.log("Find: " + docs);
-        if(docs.length === 0){
-            res.redirect(authorizationUri+"?id="+req.query.id);
-        }else{
-            res.send("Ya te tengo registrado...");
+        if(docs.length !== 0){
+            //ya te conozco asi que voy a borrar el token que tengo (que seguro k es invalido)
+            tokenModel.deleteMany({id: req.query.id},function (err) {
+                if (err) console.log(err);
+            }).then(function(){
+                notificacionModel.deleteMany({id: req.query.id},function (err) {
+                    if (err) console.log(err);
+                    else res.redirect(authorizationUri+"?id="+req.query.id);
+                });
+            });
         }
+        else res.redirect(authorizationUri+"?id="+req.query.id);
     });
 });
 
