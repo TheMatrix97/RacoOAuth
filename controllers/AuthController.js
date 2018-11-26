@@ -33,18 +33,11 @@ app.get('/auth', (req, res) => {
     console.log("id: " + req.query.id);
     tokenModel.find({id: req.query.id},function(err,docs){
         console.log("Find: " + docs);
-        if(docs.length !== 0){
-            //ya te conozco asi que voy a borrar el token que tengo (que seguro k es invalido)
-            tokenModel.remove({id: req.query.id},function (err) {
-                if (err) console.log(err);
-            }).then(function(){
-                notificacionModel.remove({id: req.query.id},function (err) {
-                    if (err) console.log(err);
-                    else res.redirect(authorizationUri+"?id="+req.query.id);
-                });
-            });
+        if(docs.length === 0){
+            res.redirect(authorizationUri+"?id="+req.query.id);
+        }else{
+            res.send("Ya te tengo registrado...");
         }
-        else res.redirect(authorizationUri+"?id="+req.query.id);
     });
 });
 
@@ -127,7 +120,19 @@ const get_all_users = function () {
   });
 };
 
+const delete_token = function (id) {
+    //ya te conozco asi que voy a borrar el token que tengo (que seguro k es invalido)
+    tokenModel.remove({id: id},function (err) {
+        if (err) console.log(err);
+    }).then(function(){
+        notificacionModel.remove({id: id},function (err) {
+            if (err) console.log(err);
+        });
+    });
+};
+
 let port=Number(process.env.PORT || 3000);
 app.listen(port, () => console.log('App listening on port ' + port));
 module.exports.private_token = private_token;
 module.exports.get_all_users = get_all_users;
+module.exports.delete_token = delete_token;
