@@ -35,10 +35,10 @@ app.get('/auth', (req, res) => {
         console.log("Find: " + docs);
         if(docs.length !== 0){
             //ya te conozco asi que voy a borrar el token que tengo (que seguro k es invalido)
-            tokenModel.deleteMany({id: req.query.id},function (err) {
+            tokenModel.remove({id: req.query.id},function (err) {
                 if (err) console.log(err);
             }).then(function(){
-                notificacionModel.deleteMany({id: req.query.id},function (err) {
+                notificacionModel.remove({id: req.query.id},function (err) {
                     if (err) console.log(err);
                     else res.redirect(authorizationUri+"?id="+req.query.id);
                 });
