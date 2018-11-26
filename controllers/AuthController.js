@@ -97,6 +97,7 @@ const private_token = function(id) {
                     }else resolve(accessToken.token.access_token);
                 }
                 catch (error) {
+                    //Muy probablemente la persona me ha revocado el token, si el error es 401, elimino all  que tengo de la persona
                     console.log('Error refreshing access token: ', error.message);
                     reject();
                 }

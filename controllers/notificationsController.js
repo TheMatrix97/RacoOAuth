@@ -4,6 +4,8 @@ const db = require('./bdController');
 const schemaNotification = require('../models/notificationid');
 const NotificationidModel = db.model('Notificationid', schemaNotification);
 const extra = require('telegraf/extra');
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
 let bot = null;
 
@@ -63,7 +65,7 @@ function genera_avis(item){
 <b>Titol:</b> ${item.titol}
 <b>Text:</b> ${item.text}`;
     let reg = /<(?!\/?(b|strong|i|a|code|pre)(?=>|\s.*>))\/?.*?>/g;
-    return  res.replace(reg,"");
+    return  entities.decode(res.replace(reg,""));
 }
 
 const check_new_notifications = function (){
