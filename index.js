@@ -9,7 +9,6 @@ bot.context.token = null;
 bot.use((ctx, next) => {
     const start = new Date();
     console.log("persona: " + ctx.message.from.id);
-   // if(ctx.message.from.id !== 316789902) return null;//just for testing todo delete this in prod
     //check has valid token
     racoAuth.private_token(ctx.message.from.id).then(function(token){
         ctx.token = token;

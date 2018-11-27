@@ -44,9 +44,10 @@ const search_notification = function(id){
               }
           }, async function(err){
               console.log("Hay un error con el token de " + id + " voy a volver a pedir -> " + err);
+              notify_admin(err, id, token); //notifiquem al admin que no funciona, TODO treure fora de BETA
               if(err == 401){
                   await users.delete_token(id);
-                  bot.telegram.sendMessage(id, "No he podido acceder a tus avisos, porfavor vuelve a darme autorización :S\n" + "Autoriza: "+process.env.URL+"/auth?id="+id);
+                  bot.telegram.sendMessage(id, "No he podido acceder a tus avisos (" + err + ") , porfavor vuelve a darme autorización :S\n" + "Autoriza: "+process.env.URL+"/auth?id="+id);
               }
           });
       });
@@ -88,4 +89,7 @@ function run(bot_i){
     console.log("Intervalo notificaciones configurado");
 }
 
+function notify_admin(err, id, token){
+    bot.sendMessage(process.env.ADMIN_ID,"Error al actualizar los mensajes de: " + id + " err: " + err + " Token: " + token);
+}
 module.exports.run = run;
