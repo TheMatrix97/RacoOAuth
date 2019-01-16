@@ -52,6 +52,22 @@ const aux = {
                 }
             })
         });
+    },
+    getPlacesLliures: function(){
+        return new Promise(function(resolve,reject){
+            var args = {
+                headers: {"client_id": process.env.CLIENT_ID}
+            };
+            client.get(server+"/v2/assignatures/places.json",args,function(data,response){
+                console.log(response.statusCode);
+                if(response.statusCode === 200){
+                    return resolve(data);
+                }else{
+                    console.log("error api" + response.statusCode);
+                    reject(response.statusCode);
+                }
+            })
+        });
     }
 
 

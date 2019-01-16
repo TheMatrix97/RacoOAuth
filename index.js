@@ -3,9 +3,11 @@ const Telegraf = require('telegraf');
 const racoAuth = require('./controllers/AuthController');
 const api = require('./controllers/ApiController');
 const notificationsController = require('./controllers/notificationsController');
+const utilsScenes = require('./utils/scenes');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
+//const bot = new Telegraf("");
 bot.context.token = null;
+utilsScenes(bot); //load scenes del bot (s'utilitza per placeslliures)
 bot.use((ctx, next) => {
     const start = new Date();
     console.log("persona: " + ctx.message.from.id);
@@ -27,7 +29,7 @@ bot.start(ctx => {
     ctx.reply("Todo esta listo! A partir de ahora te tendré al tanto de los nuevos avisos en el racó ;)");
 });
 
-bot.hears('/data', (ctx) => {
+bot.command('data', (ctx) => {
     console.log(ctx.token);
     api.getData(ctx.token).then(function(res){
         console.log(res);
@@ -37,12 +39,17 @@ bot.hears('/data', (ctx) => {
     });
 });
 
-bot.hears('/foto', (ctx) => {
+bot.command('foto', (ctx) => {
     api.getFoto(ctx.token).then(function(res){
         ctx.replyWithPhoto({
             source: Buffer.from(res)
         });
     });
+});
+
+bot.command('placeslliures', (ctx) =>{
+    console.log('places');
+    ctx.scene.enter('assigs');
 });
 
 
