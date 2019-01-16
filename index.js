@@ -5,7 +5,6 @@ const api = require('./controllers/ApiController');
 const notificationsController = require('./controllers/notificationsController');
 const utilsScenes = require('./utils/scenes');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-//const bot = new Telegraf("");
 bot.context.token = null;
 utilsScenes(bot); //load scenes del bot (s'utilitza per placeslliures)
 bot.use((ctx, next) => {

@@ -15,9 +15,11 @@ function loadAssigsScene(){
     assigs.enter((ctx) => ctx.reply('Envia las asignaturas en una sola línea separadas por un espacio'));
     assigs.on('message', (ctx) => {
         api.getPlacesLliures().then(function(res){
-            console.log(generateDataPlacesLliures(res, ctx.message.text.split(" ")));
+            let data = generateDataPlacesLliures(res, ctx.message.text.split(" "));
+            ctx.replyWithHTML(generateHtml(data));
+
         }, function(err){ //error al pillar el token
-            ask_token(ctx);
+            ctx.reply("error api");
         });
         ctx.scene.leave();
     });
@@ -40,4 +42,14 @@ function generateDataPlacesLliures(res, assg) {
        }
     });
     return r;
+}
+
+function generateHtml(data){
+    let res = "";
+    for (let key in data) {
+        if(Array.isArray(data[key])){
+            res += '<b>'+ key +':</b>\n';
+        }
+    }
+    return res;
 }
