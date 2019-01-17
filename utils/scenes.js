@@ -12,7 +12,7 @@ module.exports = function(bot){
 
 function loadAssigsScene(){
     const assigs = new Scene('assigs');
-    assigs.enter((ctx) => ctx.reply('Envia las asignaturas en una sola línea separadas por un espacio'));
+    assigs.enter((ctx) => ctx.reply('Envia les abreviatures de les assignatures en una sola línia separades per un espai'));
     assigs.on('message', (ctx) => {
         api.getPlacesLliures().then(function(res){
             let data = generateDataPlacesLliures(res, ctx.message.text.split(" "));
