@@ -48,7 +48,13 @@ function generateHtml(data){
     let res = "";
     for (let key in data) {
         if(Array.isArray(data[key])){
-            res += '<b>'+ key +':</b>\n';
+            res += '<b>'+ key +'</b>: ';
+            data[key].forEach(function(item){
+                res += item.grup;
+                //if(item.places_lliures == 0) res += '❌';
+                res += ': ' + item.places_lliures + '/' + item.places_totals + ' | '
+            });
+            res += '\n';
         }
     }
     return res;
