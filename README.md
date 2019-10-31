@@ -7,7 +7,9 @@ Bot que ofrece una interfaz via oauth 2 con la api de la fib: https://api.fib.up
 
 ## Estructura del codigo
 index.js: Define los comandos del bot + middleware de autenticacion
+
 utils/scenes.js: Define la escena, solo se usa en /placeslliures
+
 Controllers: 
 - Api: Define las peticiones a la api del racó
 - Auth: Gestiona todo el proceso de autenticación en la api del racó via oauth2
