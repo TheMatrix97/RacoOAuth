@@ -51,11 +51,18 @@ bot.command('placeslliures', (ctx) =>{
     ctx.scene.enter('assigs');
 });
 
+bot.command('refresh_notis', (ctx) => { //command only for admin
+    if(ctx.message.from.id == process.env.ADMIN_ID){
+        timeoutInterval.refresh();
+        ctx.reply("Done! interval reset"); //hacemos reset, pork lo acabamos de ejecutar....
+        notificationsController.check_new_notifications();
+    }
+});
 
 function ask_token(ctx){
     ctx.reply("Autoriza: "+process.env.URL+"/auth?id="+ctx.message.from.id);
 }
 
-notificationsController.run(bot);
+let timeoutInterval = notificationsController.run(bot);
 bot.startPolling();
 

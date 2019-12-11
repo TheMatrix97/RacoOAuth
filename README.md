@@ -28,6 +28,3 @@ Controllers:
 - ADMIN_ID: id del admin en telegram (para enviar errores)
 - PORT: puerto sobre el que se ejecuta
 
-## Notas
-- El entorno de producción actual es heroku. Sobre el dia 24 de cada mes heroku detiene la aplicación porque he agotado las horas de ejecución mensuales gratuitas (por eso al principio de cada mes llegan de golpe mensajes pasados...)
-En un futuro me gustaria migrar a otra plataforma para evitarlo (maybe google cloud?) Se aceptan sugerencias :)

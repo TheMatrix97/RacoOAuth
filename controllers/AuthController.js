@@ -78,6 +78,7 @@ try {
 });
 
 //no se si este es el mejor sitio para esto...
+//get private token of user id
 const private_token = function(id) {
     return new Promise(function (resolve, reject) {
         tokenModel.find({id: id}, async function (err, docs) {
@@ -100,8 +101,8 @@ const private_token = function(id) {
                 }
                 catch (error) {
                     //Muy probablemente la persona me ha revocado el token, si el error es 401, elimino all  que tengo de la persona
-                    console.log('Error refreshing access token: ', error.message);
-                    reject();
+                    console.log('Error refreshing access token:'  + error);
+                    reject(error);
                 }
             } else reject();
         });
@@ -109,7 +110,7 @@ const private_token = function(id) {
 };
 
 const get_all_users = function () {
-  return new Promise(function(resolve,reject){
+  return new Promise(function(resolve){
     tokenModel.find({}, async function (err,docs) {
         let ids = [];
         docs.forEach(function(item){

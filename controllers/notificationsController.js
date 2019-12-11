@@ -43,13 +43,15 @@ const search_notification = function(id){
                   console.log("Error al actualizar las notificaciones");
               }
           }, async function(err){
-              console.log("Hay un error con el token de " + id + " voy a volver a pedir -> " + err);
-              notify_admin(err, id, token); //notifiquem al admin que no funciona, TODO treure fora de BETA
-              if(err == 401){
-                  await users.delete_token(id);
-                  bot.telegram.sendMessage(id, "No he podido acceder a tus avisos (" + err + ") , porfavor vuelve a darme autorización :S\n" + "Autoriza: "+process.env.URL+"/auth?id="+id);
-              }
+              console.log("No puedo obtener los avisos del usuario " + id + " " + err);
           });
+      }).catch(async function(error){
+          console.log("error, hay un problema con el token err -> " + error.output.statusCode);
+          if (error.output.statusCode === 400){ //de momento solo borraré el token si el error es bad request
+              await users.delete_token(id);
+              bot.telegram.sendMessage(id, "No he podido actualizar tu token porfavor vuelve a darme autorización :S\n"
+                  + "Autoriza: "+process.env.URL+"/auth?id="+id).catch(function(send_fail){console.log(send_fail.message)});
+          }
       });
   });
 };
@@ -85,11 +87,9 @@ const check_new_notifications = function (){
 
 function run(bot_i){
     bot = bot_i;
-    setInterval(check_new_notifications, 300000);
+    let timeout = setInterval(check_new_notifications, 300000);
     console.log("Intervalo notificaciones configurado");
-}
-
-function notify_admin(err, id, token){
-    bot.sendMessage(process.env.ADMIN_ID,"Error al actualizar los mensajes de: " + id + " err: " + err + " Token: " + token);
+    return timeout
 }
 module.exports.run = run;
+module.exports.check_new_notifications = check_new_notifications;
